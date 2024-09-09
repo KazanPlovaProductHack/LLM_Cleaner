@@ -1,0 +1,6 @@
+numpy
+torch
+onnxruntime-gpu
+transformers
+influxdb-client
+flask
