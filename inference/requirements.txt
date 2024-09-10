@@ -1,6 +1,6 @@
 numpy>=1.21.6,<2.0.0
 torch
-onnxruntime-gpu
+onnxruntime
 transformers
 influxdb-client==1.24.0
 Werkzeug==2.2.2
