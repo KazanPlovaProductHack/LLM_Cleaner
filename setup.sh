@@ -14,11 +14,31 @@ then
     exit 1
 fi
 
+# Check if FORCE_CUDA environment variable is set
+if [ "$FORCE_CUDA" = "1" ]; then
+    echo "CUDA version forced. Using CUDA-enabled version."
+    export DOCKER_RUNTIME=nvidia
+    export BUILD_TYPE=cuda
+else
+    # Check if NVIDIA GPU is available
+    if command -v nvidia-smi &> /dev/null && nvidia-smi &> /dev/null
+    then
+        echo "NVIDIA GPU detected. Using CUDA-enabled version."
+        export DOCKER_RUNTIME=nvidia
+        export BUILD_TYPE=cuda
+    else
+        echo "No NVIDIA GPU detected. Using CPU-only version."
+        export DOCKER_RUNTIME=runc
+        export BUILD_TYPE=base
+    fi
+fi
+
 # Make sure Grafana has rights to access its DB
 sudo chmod -R 777 grafana
-
+# Do the same for InfluxDB
+sudo chmod -R 777 influxdb
 # Start the containers
-sudo docker-compose up -d
+sudo -E docker-compose up -d --build
 
 # Wait for InfluxDB to be ready
 echo "Waiting for InfluxDB to be ready..."

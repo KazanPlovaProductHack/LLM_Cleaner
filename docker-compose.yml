@@ -22,7 +22,7 @@ services:
     depends_on:
       - influxdb
     ports:
-      - "3000:3010"
+      - "3000:3000"
     volumes:
       - ./grafana:/var/lib/grafana
     environment:
@@ -46,14 +46,15 @@ services:
       - INFLUXDB_ORG=myorg
       - INFLUXDB_BUCKET=mybucket
     ports:
-      - "5010:5010"
+      - "5000:5000"
     deploy:
       resources:
         reservations:
           devices:
             - driver: nvidia
-              count: 1
+              count: all
               capabilities: [gpu]
+    runtime: ${DOCKER_RUNTIME:-runc}
     networks:
       - monitoring
       

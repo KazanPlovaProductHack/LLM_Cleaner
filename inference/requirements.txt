@@ -1,6 +1,7 @@
-numpy
+numpy>=1.21.6,<2.0.0
 torch
 onnxruntime-gpu
 transformers
-influxdb-client
-flask
+influxdb-client==1.24.0
+Werkzeug==2.2.2
+flask==2.0.1

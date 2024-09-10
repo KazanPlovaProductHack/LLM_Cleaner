@@ -1,5 +1,75 @@
-# Use NVIDIA's CUDA 11.8 base image (compatible with onnxruntime-gpu 1.15.1)
-FROM nvidia/cuda:11.8.0-runtime-ubuntu20.04
+# Base image for both CUDA and non-CUDA versions
+FROM python:3.9-slim-buster as base
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy the requirements file into the container
+COPY requirements.txt .
+
+# Install CPU-only versions of PyTorch and onnxruntime
+RUN pip3 install --no-cache-dir -r requirements.txt \
+    && pip3 install --no-cache-dir torch==1.10.0+cpu -f https://download.pytorch.org/whl/torch_stable.html \
+    && pip3 install --no-cache-dir onnxruntime
+
+# Copy the rest of the application code
+COPY . .
+
+# CUDA-enabled version
+FROM nvidia/cuda:11.8.0-runtime-ubuntu20.04 as cuda
+
+# Set the working directory in the container
+# Base image for both CPU and CUDA versions
+FROM python:3.9-slim-buster as base
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy the requirements file into the container
+COPY requirements.txt .
+
+# Install CPU-only versions of PyTorch and onnxruntime
+RUN pip3 install --no-cache-dir -r requirements.txt \
+    && pip3 install --no-cache-dir torch==1.10.0+cpu -f https://download.pytorch.org/whl/torch_stable.html \
+    && pip3 install --no-cache-dir onnxruntime
+
+# Copy the rest of the application code
+COPY . .
+
+# Base image for both CPU and CUDA versions
+FROM python:3.9-slim-buster as base
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy the requirements file into the container
+COPY requirements.txt .
+
+# Install CPU-only versions of PyTorch and onnxruntime
+RUN pip3 install --no-cache-dir -r requirements.txt \
+    && pip3 install --no-cache-dir torch==1.10.0+cpu -f https://download.pytorch.org/whl/torch_stable.html \
+    && pip3 install --no-cache-dir onnxruntime==1.15.1
+
+# Copy the rest of the application code
+COPY . .
+
+# CUDA-enabled version
+FROM nvidia/cuda:11.8.0-runtime-ubuntu20.04 as cuda
 
 # Set the working directory in the container
 WORKDIR /app
@@ -11,25 +81,27 @@ RUN apt-get update && apt-get install -y \
     cuda-command-line-tools-11-8 \
     && rm -rf /var/lib/apt/lists/*
 
-# Install system dependencies
+# Install system dependencies and CUDA libraries
 RUN apt-get update && apt-get install -y \
     build-essential \
+    libcudnn8 \
+    libcublas-11-8 \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the requirements file into the container
-COPY requirements_cpu.txt .
-# COPY requirements_cpu.txt .
+COPY requirements.txt .
 
-# # Attempt to install GPU version of onnxruntime, fallback to CPU version if it fails
-# RUN pip3 install --no-cache-dir -r requirements_gpu.txt || \
-#     (sed -i 's/onnxruntime-gpu/onnxruntime/' requirements.txt && \
-#     pip3 install --no-cache-dir -r requirements.txt)
+# Install any needed packages specified in requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code
 COPY . .
 
+# Final stage
+FROM ${BUILD_TYPE:-base} as final
+
 # Make port 5000 available to the world outside this container
-EXPOSE 5010
+EXPOSE 5000
 
 # Run a script to check CUDA and then start the inference service
 CMD ["bash", "-c", "\
