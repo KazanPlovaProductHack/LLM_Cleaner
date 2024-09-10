@@ -13,8 +13,9 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 
 # Install CPU-only versions of PyTorch and onnxruntime
-RUN pip3 install --no-cache-dir -r requirements.txt \
-    && pip3 install --no-cache-dir torch==1.10.0+cpu -f https://download.pytorch.org/whl/torch_stable.html \
+RUN pip install --upgrade pip \
+    && pip3 install --no-cache-dir -r requirements.txt \
+    && pip3 install --no-cache-dir torch==1.10.0 -f https://download.pytorch.org/whl/torch_stable.html \
     && pip3 install --no-cache-dir onnxruntime
 
 # Copy the rest of the application code
@@ -39,8 +40,9 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 
 # Install CPU-only versions of PyTorch and onnxruntime
-RUN pip3 install --no-cache-dir -r requirements.txt \
-    && pip3 install --no-cache-dir torch==1.10.0+cpu -f https://download.pytorch.org/whl/torch_stable.html \
+RUN pip install --upgrade pip \
+    && pip3 install --no-cache-dir -r requirements.txt \
+    && pip3 install --no-cache-dir torch==1.10.0 -f https://download.pytorch.org/whl/torch_stable.html \
     && pip3 install --no-cache-dir onnxruntime
 
 # Copy the rest of the application code
@@ -61,8 +63,9 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 
 # Install CPU-only versions of PyTorch and onnxruntime
-RUN pip3 install --no-cache-dir -r requirements.txt \
-    && pip3 install --no-cache-dir torch==1.10.0+cpu -f https://download.pytorch.org/whl/torch_stable.html \
+RUN pip install --upgrade pip \
+    && pip3 install --no-cache-dir -r requirements.txt \
+    && pip3 install --no-cache-dir torch==1.10.0 -f https://download.pytorch.org/whl/torch_stable.html \
     && pip3 install --no-cache-dir onnxruntime==1.15.1
 
 # Copy the rest of the application code
@@ -92,7 +95,8 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 
 # Install any needed packages specified in requirements.txt
-RUN pip3 install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt \
+    pip3 install --no-cache-dir onnxruntime-gpu
 
 # Copy the rest of the application code
 COPY . .
