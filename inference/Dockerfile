@@ -95,7 +95,8 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 
 # Install any needed packages specified in requirements.txt
-RUN pip3 install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt \
+    pip3 install --no-cache-dir onnxruntime-gpu
 
 # Copy the rest of the application code
 COPY . .
