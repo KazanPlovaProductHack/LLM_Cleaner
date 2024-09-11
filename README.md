@@ -78,7 +78,7 @@ Replace "Your message here" with the actual message you want to analyze.
 
 The response will be in JSON format, containing the probabilities:
 
-``json
+```json
 {
   "probabilities": {
     "harm": 0.9826197028160095,
