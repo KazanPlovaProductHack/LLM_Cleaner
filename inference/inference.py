@@ -9,6 +9,14 @@ from datetime import datetime
 import json
 from flask import Flask, request, jsonify
 
+if torch.cuda.is_available():
+    print("CUDA is available in Torch. GPU can be used.")
+    print(f"Number of CUDA devices: {torch.cuda.device_count()}")
+    print(f"Current CUDA device: {torch.cuda.current_device()}")
+    print(f"CUDA device name: {torch.cuda.get_device_name(0)}")
+else:
+    print("CUDA is not available in Torch. Only CPU can be used.")
+
 # Load environment variables
 INFLUXDB_URL: str = os.getenv('INFLUXDB_URL', '')
 INFLUXDB_TOKEN: str = os.getenv('INFLUXDB_TOKEN', '')
@@ -20,11 +28,10 @@ tokenizer = AutoTokenizer.from_pretrained("./onnx")
 
 # Try to use CUDA, fall back to CPU if not available
 try:
-    providers = ['CUDAExecutionProvider', 'CPUExecutionProvider']
+    providers = ['CUDAExecutionProvider']
     ort_session = ort.InferenceSession("./onnx/model.onnx", providers=providers)
-    print("Using CUDA for inference")
 except Exception as e:
-    print(f"CUDA not available, falling back to CPU: {str(e)}")
+    print(f"CUDA not available in ONNX, falling back to CPU: {str(e)}")
     ort_session = ort.InferenceSession("./onnx/model.onnx", providers=['CPUExecutionProvider'])
 
 hypothesis_template: str = "This example is {}."

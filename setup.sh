@@ -37,6 +37,8 @@ fi
 sudo chmod -R 777 grafana
 # Do the same for InfluxDB
 sudo chmod -R 777 influxdb
+# Build the inference image
+sudo cd inference && sudo docker build .
 # Start the containers
 sudo -E docker-compose up -d --build
 

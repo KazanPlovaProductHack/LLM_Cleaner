@@ -32,9 +32,10 @@ services:
       - monitoring
 
   inference:
-    build:
-      context: ./inference
-      dockerfile: Dockerfile
+    image: llm_cleaner-inference
+    # build:
+    #   context: ./inference
+    #   dockerfile: Dockerfile
     container_name: inference
     depends_on:
       - influxdb
@@ -47,6 +48,7 @@ services:
       - INFLUXDB_BUCKET=mybucket
     ports:
       - "5000:5000"
+    command: ["bash", "-c", "nvidia-smi && python3 inference.py"]
     deploy:
       resources:
         reservations:
@@ -54,7 +56,6 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu]
-    runtime: ${DOCKER_RUNTIME:-runc}
     networks:
       - monitoring
       
