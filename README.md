@@ -11,16 +11,11 @@ Contains a pre-configured InfluxDB and Grafana setup for our monitoring system.
 
 ## Quickstart:
 
-1. Unzip the archive:
+1. Clone the repo:
+2. Navigate to the directory (also put onnx folder in LLM_Cleaner/inference):
     
     ```bash
-    unzip monitoring-setup.zip
-    ```
-    
-2. Navigate to the extracted directory:
-    
-    ```bash
-    cd monitoring-setup
+    cd LLM_Cleaner
     ```
     
 3. Make the setup script executable:
@@ -62,7 +57,7 @@ Contains a pre-configured InfluxDB and Grafana setup for our monitoring system.
 
 - Pre-configured Grafana dashboards for monitoring chat rudeness and inappropriate behavior
 - InfluxDB data source setup in Grafana
-- Docker Compose file for easy deployment
+- Docker Compose files for easy deployment
 
 # Sending data to the Inference Service:
 
@@ -81,23 +76,14 @@ curl -X POST \
 
 Replace "Your message here" with the actual message you want to analyze.
 
-The response will be in JSON format, containing the original message data (a little broken at the moment) along with the inference results:
+The response will be in JSON format, containing the probabilities:
 
-```json
+``json
 {
-  "msg_data": {
-    "sender": "user",
-    "text": "Your message here"
-  },
-  "fraud_probs": {
-    "rudeness": 0.1,
-    "intim": 0.05,
-    "harm": 0.01
-  },
-  "fraud_verdicts": {
-    "rudeness": 0,
-    "intim": 0,
-    "harm": 0
+  "probabilities": {
+    "harm": 0.9826197028160095,
+    "intim": 0.6320635676383972,
+    "rudeness": 0.9987452626228333
   }
 }
 ```
