@@ -15,7 +15,7 @@ substitute_env_vars: create_env_file
 	@echo "Substituting environment variables in YAML file..."
 	./substitute_env_vars.sh
 
-get_model_weights: create_env_file
+get_model_weights: substitute_env_vars
 	@echo "Download the model file..."
 	gdown --id 1zOzt25XH_zCW47rfnNpKsIbc-O15H6wx -O ai_product_hack_model.zip
 
@@ -23,6 +23,8 @@ get_model_weights: create_env_file
 	unzip ai_product_hack_model.zip -d ./onnx && rm ai_product_hack_model.zip
 	cp -r onnx inference/ && rm -rf ./onnx
 	
+llm_cleaner_init: get_model_weights
+
 llm_cleaner_run: substitute_env_vars
 	@echo "Setup and run software..."
 	chmod +x setup.sh
