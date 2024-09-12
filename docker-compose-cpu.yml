@@ -1,0 +1,54 @@
+services:
+  influxdb:
+    image: influxdb:2.6
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./influxdb:/var/lib/influxdb2
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: adminpassword
+      DOCKER_INFLUXDB_INIT_ORG: myorg
+      DOCKER_INFLUXDB_INIT_BUCKET: mybucket
+      DOCKER_INFLUXDB_INIT_RETENTION: "0s"
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    depends_on:
+      - influxdb
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=adminpassword
+    networks:
+      - monitoring
+
+  inference:
+    image: llm_cleaner-inference:cpu
+    container_name: inference
+    depends_on:
+      - influxdb
+    volumes:
+      - ./inference:/app
+    environment:
+      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_TOKEN=0ldjH7LCo0j3AQiZJZnow9m-VtevGr7x1CpcbO7vm0ek-AhCIKALdQ3fY2fPbsFOyt2797rOfIWOalCCAWaYcg==
+      - INFLUXDB_ORG=myorg
+      - INFLUXDB_BUCKET=mybucket
+    ports:
+      - "5000:5000"
+    command: ["bash", "-c", "python3 inference.py"]
+    networks:
+      - monitoring
+      
+networks:
+  monitoring:
+    driver: bridge

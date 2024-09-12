@@ -9,6 +9,14 @@ from datetime import datetime
 import json
 from flask import Flask, request, jsonify
 
+if torch.cuda.is_available():
+    print("CUDA is available in Torch. GPU can be used.")
+    print(f"Number of CUDA devices: {torch.cuda.device_count()}")
+    print(f"Current CUDA device: {torch.cuda.current_device()}")
+    print(f"CUDA device name: {torch.cuda.get_device_name(0)}")
+else:
+    print("CUDA is not available in Torch. Only CPU can be used.")
+
 # Load environment variables
 INFLUXDB_URL: str = os.getenv('INFLUXDB_URL', '')
 INFLUXDB_TOKEN: str = os.getenv('INFLUXDB_TOKEN', '')
@@ -20,15 +28,27 @@ tokenizer = AutoTokenizer.from_pretrained("./onnx")
 
 # Try to use CUDA, fall back to CPU if not available
 try:
-    providers = ['CUDAExecutionProvider', 'CPUExecutionProvider']
+    providers = ['CUDAExecutionProvider']
     ort_session = ort.InferenceSession("./onnx/model.onnx", providers=providers)
-    print("Using CUDA for inference")
 except Exception as e:
-    print(f"CUDA not available, falling back to CPU: {str(e)}")
+    print(f"CUDA not available in ONNX, falling back to CPU: {str(e)}")
     ort_session = ort.InferenceSession("./onnx/model.onnx", providers=['CPUExecutionProvider'])
 
 hypothesis_template: str = "This example is {}."
-labels: List[str] = ['rudeness', 'intim', 'harm']  # Simplified list of labels
+#labels: List[str] = ['rudeness', 'intim', 'harm']  # Simplified list of labels
+labels = ['Sexual Content', 'Hate', 'Child Sexual Exploitation', 'Suicide & Self-Harm', 'Violent Crimes', 'Non-Violent Crimes', 'Prompt Injection', 'Politics', 'Материться']
+
+label_transformation = {
+    'Sexual Content': 'sexual_content',
+    'Hate': 'hate',
+    'Child Sexual Exploitation': 'child_sexual_exploitation',
+    'Suicide & Self-Harm': 'suicide_and_self_harm',
+    'Violent Crimes': 'violent_crimes',
+    'Non-Violent Crimes': 'nonviolent_crimes',
+    'Prompt Injection': 'prompt_injection',
+    'Politics': 'politics',
+    'Материться': 'swearing'
+}
 
 app = Flask(__name__)
 
@@ -86,8 +106,8 @@ def send_to_influxdb(result: Dict[str, Any]) -> None:
         .field("text", result['msg_data']['text'])
 
     for label in labels:
-        point = point.field(f"prob_{label}", result['fraud_probs'][label])
-        point = point.field(f"verdict_{label}", result['fraud_verdicts'][label])
+        point = point.field(f"prob_{label_transformation[label]}", result['fraud_probs'][label])
+        point = point.field(f"verdict_{label_transformation[label]}", result['fraud_verdicts'][label])
 
     point = point.time(datetime.utcnow())
 
