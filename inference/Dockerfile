@@ -18,6 +18,13 @@ RUN pip install --upgrade pip \
     && pip3 install --no-cache-dir torch==1.10.0 -f https://download.pytorch.org/whl/torch_stable.html \
     && pip3 install --no-cache-dir onnxruntime
 
+# Download the model weights from Google Drive
+RUN gdown --id 1zOzt25XH_zCW47rfnNpKsIbc-O15H6wx -O ai_product_hack_model.zip
+
+# Unzip the downloaded file
+RUN unzip ai_product_hack_model.zip && \
+    rm ai_product_hack_model.zip
+
 # Copy the rest of the application code
 COPY . .
 
