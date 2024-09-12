@@ -26,7 +26,7 @@ Contains a pre-configured InfluxDB and Grafana setup for our monitoring system.
     cp -r onnx inference/ && rm -rf ./onnx
     ```
 
-4. Navigate to the directory (also put onnx folder in LLM_Cleaner/inference):
+4. Navigate to the project directory:
     
     ```bash
     cd LLM_Cleaner
