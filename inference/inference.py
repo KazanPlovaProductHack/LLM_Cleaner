@@ -38,6 +38,18 @@ hypothesis_template: str = "This example is {}."
 #labels: List[str] = ['rudeness', 'intim', 'harm']  # Simplified list of labels
 labels = ['Sexual Content', 'Hate', 'Child Sexual Exploitation', 'Suicide & Self-Harm', 'Violent Crimes', 'Non-Violent Crimes', 'Prompt Injection', 'Politics', 'Материться']
 
+label_transformation = {
+    'Sexual Content': 'sexual_content',
+    'Hate': 'hate',
+    'Child Sexual Exploitation': 'child_sexual_exploitation',
+    'Suicide & Self-Harm': 'suicide_and_self_harm',
+    'Violent Crimes': 'violent_crimes',
+    'Non-Violent Crimes': 'nonviolent_crimes',
+    'Prompt Injection': 'prompt_injection',
+    'Politics': 'politics',
+    'Материться': 'swearing'
+}
+
 app = Flask(__name__)
 
 def run_onnx_inference(sequence_to_classify: str, candidate_labels: List[str]) -> List[float]:
@@ -94,8 +106,8 @@ def send_to_influxdb(result: Dict[str, Any]) -> None:
         .field("text", result['msg_data']['text'])
 
     for label in labels:
-        point = point.field(f"prob_{label}", result['fraud_probs'][label])
-        point = point.field(f"verdict_{label}", result['fraud_verdicts'][label])
+        point = point.field(f"prob_{label_transformation[label]}", result['fraud_probs'][label])
+        point = point.field(f"verdict_{label_transformation[label]}", result['fraud_verdicts'][label])
 
     point = point.time(datetime.utcnow())
 
