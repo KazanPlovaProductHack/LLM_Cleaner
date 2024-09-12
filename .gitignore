@@ -163,3 +163,4 @@ cython_debug/
 
 influxdb/engine/data/
 inference/onnx
+grafana/alerting/contact_points.yaml

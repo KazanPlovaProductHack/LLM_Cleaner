@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Make sure both setup scripts are executable
-chmod +x setup_cuda.sh setup_cpu.sh
+chmod +x setup_cuda.sh setup_cpu.sh substitute_env_vars.sh
 
 # Check if Docker is installed
 if ! command -v docker &> /dev/null
