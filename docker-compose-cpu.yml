@@ -25,9 +25,13 @@ services:
       - "3000:3000"
     volumes:
       - ./grafana:/var/lib/grafana
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/alerting/contact_points.yaml:/etc/grafana/provisioning/alerting/contact_points.yaml
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=adminpassword
+      - TELEGRAM_BOTTOKEN=${TELEGRAM_BOTTOKEN}
+      - TELEGRAM_CHATID=${TELEGRAM_CHATID}
     networks:
       - monitoring
 
@@ -44,7 +48,7 @@ services:
       - INFLUXDB_ORG=myorg
       - INFLUXDB_BUCKET=mybucket
     ports:
-      - "5000:5000"
+      - "5005:5000"
     command: ["bash", "-c", "python3 inference.py"]
     networks:
       - monitoring

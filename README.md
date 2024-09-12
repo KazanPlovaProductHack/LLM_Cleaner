@@ -28,16 +28,16 @@ Contains a pre-configured InfluxDB and Grafana setup for our monitoring system.
     cd LLM_Cleaner
     ```
     
-4. Make the setup script executable:
+4. [alternative] Run make command and input telegram bot and chat ids:
     
     ```bash
-    chmod +x setup.sh
+    make llm_cleaner_init
     ```
     
-5. Run the setup script (may require sudo rights):
+5. Run make command (may require sudo rights):
     
     ```bash
-    ./setup.sh
+    make llm_cleaner_run
     ```
     
     This script should do everything for you.
