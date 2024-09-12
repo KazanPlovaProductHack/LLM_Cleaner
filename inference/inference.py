@@ -37,7 +37,7 @@ except Exception as e:
 
 hypothesis_template: str = "This example is {}."
 #labels: List[str] = ['rudeness', 'intim', 'harm']  # Simplified list of labels
-labels = ['Sexual Content', 'Hate', 'Child Sexual Exploitation', 'Suicide & Self-Harm', 'Violent Crimes', 'Non-Violent Crimes', 'Prompt Injection', 'Politics', 'Материться']
+labels = ['Sexual Content', 'Hate', 'Child Sexual Exploitation', 'Suicide & Self-Harm', 'Violent Crimes', 'Non-Violent Crimes', 'Prompt Injection', 'Politics', 'swearing']
 regex = r"(?iu)\b(?:(?:(?:у|[нз]а|(?:хитро|не)?вз?[ыьъ]|с[ьъ]|(?:и|ра)[зс]ъ?|(?:о[тб]|п[оа]д)[ьъ]?|(?:(?!хл).\B)+?[оаеи-])-?)?(?:[её](?:б(?!о[рй]|рач)|п[уа](?:ц|тс))|и[пб][ае][тцд][ьъ]).*?|(?:(?:н[иеа]|ра[зс]|[зд]?[ао](?:т|дн[оа])?|с(?:м[еи])?|а[пб]ч)-?)?ху(?:[яйиеёю]|л+и(?!ган)).*?|бл(?:[эя]|еа?)(?:[дт][ьъ]?)?|\S*?(?:п(?:[иеё]зд|ид[аое]?р|ед(?:р(?!о)|[аое]р|ик)|охую)|бля(?:[дбц]|тс)|[ое]ху[яйиеё]|хуйн).*?|(?:о[тб]?|про|на|вы)?м(?:анд(?:[ауеыи](?:л(?:и[сзщ])?[ауеиы])?|ой|[ао]в.*?|юк(?:ов|[ауи])?|е[нт]ь|ища)|уд(?:[яаиое].+?|е?н(?:[ьюия]|ей))|[ао]л[ао]ф[ьъ](?:[яиюе]|[еёо]й))|елд[ауые].*?|ля[тд]ь|(?:[нз]а|по)х)\b"
 
 label_transformation = {
@@ -49,7 +49,7 @@ label_transformation = {
     'Non-Violent Crimes': 'nonviolent_crimes',
     'Prompt Injection': 'prompt_injection',
     'Politics': 'politics',
-    'Материться': 'swearing'
+    'swearing': 'swearing'
 }
 
 app = Flask(__name__)
@@ -89,7 +89,7 @@ def process_message(message: Dict[str, str]) -> Dict[str, Any]:
     """
     probabilities = run_onnx_inference(message['text'], labels[:-1])
     fraud_probs = {label: float(prob) for label, prob in zip(labels, probabilities)}
-    fraud_verdicts = {label: int(prob > 0.5) for label, prob in fraud_probs.items()}
+    fraud_verdicts = {label: int(prob > 0.9) for label, prob in fraud_probs.items()}
 
     result = {
         'msg_data': message,
