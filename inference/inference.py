@@ -35,7 +35,8 @@ except Exception as e:
     ort_session = ort.InferenceSession("./onnx/model.onnx", providers=['CPUExecutionProvider'])
 
 hypothesis_template: str = "This example is {}."
-labels: List[str] = ['rudeness', 'intim', 'harm']  # Simplified list of labels
+#labels: List[str] = ['rudeness', 'intim', 'harm']  # Simplified list of labels
+labels = ['Sexual Content', 'Hate', 'Child Sexual Exploitation', 'Suicide & Self-Harm', 'Violent Crimes', 'Non-Violent Crimes', 'Prompt Injection', 'Politics', 'Материться']
 
 app = Flask(__name__)
 

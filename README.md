@@ -81,9 +81,15 @@ The response will be in JSON format, containing the probabilities:
 ```json
 {
   "probabilities": {
-    "harm": 0.9826197028160095,
-    "intim": 0.6320635676383972,
-    "rudeness": 0.9987452626228333
+    "Child Sexual Exploitation": 0.7839430570602417,
+    "Hate": 0.9150898456573486,
+    "Non-Violent Crimes": 0.026126563549041748,
+    "Politics": 0.16054880619049072,
+    "Prompt Injection": 0.37052857875823975,
+    "Sexual Content": 0.9613398909568787,
+    "Suicide & Self-Harm": 0.7113082408905029,
+    "Violent Crimes": 0.5088530778884888,
+    "Материться": 0.9813034534454346
   }
 }
 ```
