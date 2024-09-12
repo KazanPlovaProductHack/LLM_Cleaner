@@ -4,9 +4,12 @@ FROM python:3.9-slim-buster
 # Set the working directory in the container
 WORKDIR /app
 
-# Install system dependencies
+# Install Python and system dependencies
 RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
     build-essential \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the requirements file into the container
