@@ -12,26 +12,23 @@ Contains a pre-configured InfluxDB and Grafana setup for our monitoring system.
 ## Quickstart:
 
 1. Clone the repo:
-
 2. Navigate to the project directory:
     
     ```bash
     cd LLM_Cleaner
     ```
     
-3. [alternative] Run make command and input telegram bot and chat ids:
+3. Run make command and input telegram bot and chat ids (when running the first time). This will fetch model weights and create contact_point.yaml for Telegram alerts:
     
     ```bash
     make llm_cleaner_init
     ```
     
-4. Run make command (may require sudo rights):
+4. Run make command. This will get service running:
     
     ```bash
     make llm_cleaner_run
     ```
-    
-    This script should do everything for you.
     
 5. Access the Grafana UI in your browser:
     
