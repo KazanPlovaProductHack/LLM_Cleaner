@@ -12,37 +12,25 @@ Contains a pre-configured InfluxDB and Grafana setup for our monitoring system.
 ## Quickstart:
 
 1. Clone the repo:
-2. Load weights:
-    ```bash
-    # Download the model file
-    gdown --id 1zOzt25XH_zCW47rfnNpKsIbc-O15H6wx -O ai_product_hack_model.zip
-
-    # Unzip the downloaded file
-    unzip ai_product_hack_model.zip -d ./onnx && rm ai_product_hack_model.zip
-    cp -r onnx inference/ && rm -rf ./onnx
-    ```
-
-3. Navigate to the project directory:
+2. Navigate to the project directory:
     
     ```bash
     cd LLM_Cleaner
     ```
     
-4. [alternative] Run make command and input telegram bot and chat ids:
+3. Run make command and input telegram bot and chat ids (when running the first time). This will fetch model weights and create contact_point.yaml for Telegram alerts:
     
     ```bash
     make llm_cleaner_init
     ```
     
-5. Run make command (may require sudo rights):
+4. Run make command. This will get service running:
     
     ```bash
     make llm_cleaner_run
     ```
     
-    This script should do everything for you.
-    
-6. Access the Grafana UI in your browser:
+5. Access the Grafana UI in your browser:
     
     ```
     http://localhost:3000
@@ -52,7 +40,7 @@ Contains a pre-configured InfluxDB and Grafana setup for our monitoring system.
     
     - Username: admin
     - Password: adminpassword
-7. Access the InfluxDB UI in your browser:
+6. Access the InfluxDB UI in your browser:
     
     ```
     http://localhost:8086
