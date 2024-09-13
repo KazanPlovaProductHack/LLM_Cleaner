@@ -17,11 +17,11 @@ substitute_env_vars: create_env_file
 
 get_model_weights: substitute_env_vars
 	@echo "Download the model file..."
-    gdown --id 1zOzt25XH_zCW47rfnNpKsIbc-O15H6wx -O ai_product_hack_model.zip
+	gdown --id 1zOzt25XH_zCW47rfnNpKsIbc-O15H6wx -O ai_product_hack_model.zip
 
 	@echo "Unzip the downloaded file..."
-    unzip ai_product_hack_model.zip -d ./onnx && rm ai_product_hack_model.zip
-    cp -r onnx inference/ && rm -rf ./onnx
+	unzip ai_product_hack_model.zip -d ./onnx && rm ai_product_hack_model.zip
+	cp -r onnx inference/ && rm -rf ./onnx
 	
 llm_cleaner_init: get_model_weights
 
